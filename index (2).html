@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Екатерина Шкиль | Академия коммерческой фотографии</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gold: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --black: #0a0a0a;
+            --dark-grey: #121212;
+            --gold-solid: #d4af37;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background: var(--black); color: white; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+
+        /* АНИМАЦИИ */
+        @keyframes modalFade { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes goldGlow { 
+            0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); } 
+            50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); } 
+            100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); } 
+        }
+
+        /* ГЛАВНЫЙ ЭКРАН */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("https://uploads.onecompiler.io/44ga92u9f/44ga8urbu/1000204178.jpg");
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(40px, 8vw, 70px); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 10px; line-height: 1.1; }
+        .hero .subtitle { font-size: clamp(14px, 3vw, 18px); color: var(--gold-solid); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; font-weight: 300; }
+
+        .btn {
+            display: inline-block; padding: 18px 45px; background: var(--gold); color: black;
+            text-decoration: none; font-weight: 700; text-transform: uppercase; font-size: 13px;
+            cursor: pointer; transition: 0.4s; border-radius: 2px; border: none;
+        }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4); }
+
+        /* КОНТЕЙНЕР */
+        .container { width: 90%; max-width: 1200px; margin: auto; padding: 80px 0; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 36px; text-align: center; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-solid); }
+
+        /* ГАЛЕРЕЯ */
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .gallery img { width: 100%; height: 500px; object-fit: cover; border: 1px solid #222; transition: 0.5s; }
+        .gallery img:hover { border-color: var(--gold-solid); transform: scale(1.02); }
+
+        /* ОТЗЫВЫ */
+        .rating { color: #fdbb2d; font-size: 24px; margin-bottom: 10px; }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .review-card { background: #111; padding: 40px; border-radius: 5px; border-left: 3px solid var(--gold-solid); }
+        .review-card p { font-style: italic; color: #ccc; margin-bottom: 15px; }
+        .review-card .name { font-weight: 600; color: white; font-size: 14px; }
+
+        /* ПОПАП ТАРИФОВ */
+        .popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .popup-content { 
+            background: #050505; padding: 50px 30px; border: 1px solid #333; max-width: 900px; width: 95%; 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px; position: relative;
+            animation: modalFade 0.4s ease forwards;
+        }
+
+        .plan { padding: 40px 20px; border: 1px solid #222; text-align: center; background: #0c0c0c; transition: 0.4s; }
+        .plan h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 10px; }
+        .price { font-size: 32px; font-weight: 700; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 15px 0; }
+        
+        .plan.featured { border: 2px solid var(--gold-solid); background: #111; animation: goldGlow 3s infinite; transform: scale(1.03); }
+
+        .plan ul { text-align: left; list-style: none; color: #aaa; font-size: 14px; margin-bottom: 30px; }
+        .plan ul li { margin-bottom: 12px; display: flex; align-items: center; }
+        .plan ul li::before { content: "✦"; color: var(--gold-solid); margin-right: 10px; }
+
+        .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: var(--gold-solid); }
+
+        @media(max-width: 800px) {
+            .popup-content { grid-template-columns: 1fr; overflow-y: auto; height: 90vh; }
+            .hero h1 { font-size: 36px; }
+            .plan.featured { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Екатерина Шкиль</h1>
+        <p class="subtitle">Искусство и бизнес коммерческой фотографии</p>
+        <div class="btn" onclick="openPopup()">Узнать подробности</div>
+    </div>
+</section>
+
+<div class="container">
+    <h2>Портфолио</h2>
+    <div class="gallery">
+        <img src="https://uploads.onecompiler.io/44ga92u9f/44ga9cmkp/1000204386.jpg">
+        <img src="https://uploads.onecompiler.io/44ga92u9f/44ga8urbu/1000204178.jpg">
+        <img src="https://uploads.onecompiler.io/44ga92u9f/44ga9cmkp/1000204384.jpg">
+    </div>
+</div>
+
+<div class="container">
+    <h2>Отзывы студентов</h2>
+    <div style="text-align: center; margin-bottom: 40px;">
+        <div class="rating">★★★★★ 4.8/5</div>
+        <p style="color: #666;">На основе обучения более 100 учеников</p>
+    </div>
+    <div class="reviews-grid">
+        <div class="review-card">
+            <p>"Екатерина Шкиль перевернула моё понимание света. Её уроки — это не просто теория, а реальные навыки для заработка."</p>
+            <div class="name">Анна К. • Коммерческий фотограф</div>
+        </div>
+        <div class="review-card">
+            <p>"Благодаря Кате я собрала своё первое профессиональное портфолио и нашла крупных заказчиков в Бишкеке."</p>
+            <div class="name">Марина С. • Выпускница Академии</div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="popup">
+    <div class="close" onclick="closePopup()">✕</div>
+    <div class="popup-content">
+        
+        <div class="plan">
+            <h3>Самостоятельный</h3>
+            <div class="price">9,000 сом</div>
+            <ul>
+                <li>Полный видео-курс</li>
+                <li>Закрытый Telegram-канал</li>
+                <li>Доступ навсегда</li>
+            </ul>
+            <a href="https://wa.me/996XXXXXX?text=Интересует%20курс%20Самостоятельный" class="btn" style="width: 100%; text-align: center;">Записаться</a>
+        </div>
+
+        <div class="plan featured">
+            <div style="font-size: 10px; font-weight: 700; color: var(--gold-solid); margin-bottom: 5px; letter-spacing: 2px;">ПОПУЛЯРНЫЙ</div>
+            <h3>Практика PRO</h3>
+            <div class="price">35,000 сом</div>
+            <ul>
+                <li>5 живых практических съемок</li>
+                <li>Личный разбор работ Екатериной</li>
+                <li>Создание PRO-портфолио</li>
+            </ul>
+            <a href="https://wa.me/996XXXXXX?text=Интересует%20курс%20Практика%20PRO" class="btn" style="width: 100%; text-align: center;">Хочу в группу</a>
+        </div>
+
+    </div>
+</div>
+
+<footer style="padding: 60px; text-align: center; border-top: 1px solid #111;">
+    <p style="color: #444; letter-spacing: 3px; font-size: 11px; text-transform: uppercase;">Ekaterina Shkil Academy • 2026</p>
+</footer>
+
+<script>
+    function openPopup() { document.getElementById("popup").style.display = "flex"; }
+    function closePopup() { document.getElementById("popup").style.display = "none"; }
+</script>
+
+</body>
+</html>
